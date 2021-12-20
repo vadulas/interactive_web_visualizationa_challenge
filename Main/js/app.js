@@ -1,8 +1,6 @@
 
 d3.json("./data/samples.json").then((importedData) => {
 
-	//console.log(importedData);
-
 	let data = importedData;
 
 	// Dynamically add test Subject ID No. to the dropdown menus
@@ -14,9 +12,11 @@ d3.json("./data/samples.json").then((importedData) => {
 		d3.select("#selDataset").append("option").text(name);
     });
 
-
     init();
 
+    /*
+    * Function to initialize the page with the default charts and data 
+    */
     function init(){
 
         // Create a horizontal bar chart with a dropdown menu to display 
@@ -29,7 +29,6 @@ d3.json("./data/samples.json").then((importedData) => {
 
         let sel = document.getElementById("selDataset");
         let selVal  = sel.options[sel.selectedIndex].value;
-
 
         let graphData = getDataForGraph(selVal, "bar");
         let barTrace = {
@@ -78,6 +77,12 @@ d3.json("./data/samples.json").then((importedData) => {
     }
 });
 
+/*
+* Function invoked on selecting a subject id from the drop down
+* Accepts the selected subject id and replots the bar and the bubble chart
+* 
+*/
+
 function optionChanged(value){
 
     console.log(`Now the selected value is ${value}`);
@@ -97,7 +102,11 @@ function optionChanged(value){
     Plotly.restyle("bubble", "text", [bubbleGraphData[2]])
 
 }
-
+/*
+* Function to get the sample data for the selected id
+* Accepts all the samples in the dataset and the selected sample id
+* Returns a Sample array
+*/
 function getTheValuesForSelectedSample(samples, selVal){
     for (let i = 0; i < samples.length; i++){
         sample = samples[i]
@@ -106,7 +115,12 @@ function getTheValuesForSelectedSample(samples, selVal){
     }
 }
 
-function getDataForGraph(selVal, top10Flag){
+/*
+* Function to get the data to plot the bar and the bubble graphs for the selected id
+* Accepts the selected sample id and the string indicating the type of the chart (bar or bubble)
+* Returns a list of array
+*/
+function getDataForGraph(selVal, charType){
     let graphData = [];
     
     //Get the selected sample data
@@ -115,17 +129,14 @@ function getDataForGraph(selVal, top10Flag){
     let otu_ids = [];
     let sample_values = [];
     let otu_labels = [];
-    console.log(sample)
-    //Select the OTU IDS for the selected value in teh drop down
 
-    if (top10Flag === "bar"){
-        console.log("Executing when the option is bar")
+    //Select the OTU IDS for the selected value in the drop down
+    if (charType === "bar"){
         otu_ids = (sample.otu_ids).slice(0, 10).reverse();
         sample_values = (sample.sample_values).slice(0, 10).reverse();
         otu_labels = (sample.otu_labels).slice(0, 10).reverse();
         
-    } else if (top10Flag === "bubble"){
-        console.log("Executing when the option is bubble")
+    } else {
         otu_ids = (sample.otu_ids);
         sample_values = (sample.sample_values);
         otu_labels = (sample.otu_labels);
@@ -134,7 +145,6 @@ function getDataForGraph(selVal, top10Flag){
     graphData.push(otu_ids);
     graphData.push(sample_values);
     graphData.push(otu_labels);
-    console.log(graphData)
     return graphData;
     
 }
