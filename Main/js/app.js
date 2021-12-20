@@ -12,6 +12,8 @@ d3.json("./data/samples.json").then((importedData) => {
 		d3.select("#selDataset").append("option").text(name);
     });
 
+    console.log(metadata);
+
     init();
 
     /*
@@ -69,13 +71,35 @@ d3.json("./data/samples.json").then((importedData) => {
 
         let bubbleData = [bubbleTrace];
         let bubbleLayout = {
-            title: "Bubble Chart for the Samples"
+            title: "Bubble Chart for the Subject's Samples"
         };
 
         Plotly.newPlot("bubble", bubbleData, bubbleLayout);
 
+
+        // Populate the demographic information
+        let subjectMetadata = getMetadata(metadata, selVal);
+        console.log(subjectMetadata)
+        displayDemoInfo(subjectMetadata);
+
     }
 });
+
+/*
+* Function to get the sample data for the selected id
+* Accepts all the samples in the dataset and the selected sample id
+* Returns a Sample array
+*/
+function displayDemoInfo(subjectMetaData){
+    let demoDiv = d3.select("#sample-metadata");
+    demoDiv.append("h5").text(`ID: ${subjectMetaData.id}`);
+    demoDiv.append("h5").text(`Ethnicity: ${subjectMetaData.ethnicity}`);
+    demoDiv.append("h5").text(`Gender: ${subjectMetaData.gender}`);
+    demoDiv.append("h5").text(`Age: ${subjectMetaData.age}`);
+    demoDiv.append("h5").text(`Location: ${subjectMetaData.location}`);
+    demoDiv.append("h5").text(`BBType: ${subjectMetaData.bbtype}`);
+    demoDiv.append("h5").text(`WFreq: ${subjectMetaData.wfreq}`); 
+}
 
 /*
 * Function invoked on selecting a subject id from the drop down
@@ -101,6 +125,15 @@ function optionChanged(value){
     Plotly.restyle("bubble", "y", [bubbleGraphData[1]])
     Plotly.restyle("bubble", "text", [bubbleGraphData[2]])
 
+     
+     //clear out the current demographic content
+      d3.select("#sample-metadata").html(""); 
+
+    //Update the demographic information for the selected subject Id
+     let subjectMetadata = getMetadata(metadata, value);
+     
+     displayDemoInfo(subjectMetadata);
+
 }
 /*
 * Function to get the sample data for the selected id
@@ -112,6 +145,19 @@ function getTheValuesForSelectedSample(samples, selVal){
         sample = samples[i]
 
         if (sample.id == selVal) return sample;
+    }
+}
+
+/*
+* Function to get the sample data for the selected id
+* Accepts all the samples in the dataset and the selected sample id
+* Returns a Sample array
+*/
+function getMetadata(metadata, selVal){
+    for (let i = 0; i < metadata.length; i++){
+        subject = metadata[i]
+
+        if (subject.id == selVal) return subject;
     }
 }
 
