@@ -82,8 +82,58 @@ d3.json("./data/samples.json").then((importedData) => {
         console.log(subjectMetadata)
         displayDemoInfo(subjectMetadata);
 
+        // Bonus Gauge 
+        let gaugeData = getGaugeTraceData(subjectMetadata);
+        let gaugeLayout = { width: 600, height: 450, margin: { t: 0, b: 0 } };
+        Plotly.newPlot('gauge', gaugeData, gaugeLayout);
     }
 });
+
+
+/*
+* Function to get the trace data for teh gauge
+* Accepts all selected subject's metadata 
+* Returns a trace data array for the gauge
+*/
+function getGaugeTraceData(subjectMetadata){
+    
+    let washFreq = subjectMetadata.wfreq;
+
+    let data = [
+        {
+          domain: { x: [0, 1], y: [0, 1] },
+          value: washFreq,
+          title: { text: "Wash Frequency" },
+          type: "indicator",
+          mode: "gauge+number",
+          textposition: "inside",
+          gauge: {
+            shape: "angular",
+            axis: {
+                range: [0,10],
+                visible: true,
+                tickmode: "array",
+                tickvals: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                ticks: "outside"
+            },
+            steps: [
+              { range: [0, 1], color: "lightgray" },
+              { range: [1, 2], color: "gray" },
+              { range: [2, 3], color: "lightgray" },
+              { range: [3, 4], color: "gray" },
+              { range: [4, 5], color: "lightgray" },
+              { range: [5, 6], color: "gray" },
+              { range: [6, 7], color: "lightgray" },
+              { range: [7, 8], color: "gray" },
+              { range: [8, 9], color: "lightgray" },
+              { range: [9, 10], color: "gray" }
+            ]
+          }
+        }
+      ];
+    
+      return data;
+}
 
 /*
 * Function to get the sample data for the selected id
@@ -92,13 +142,13 @@ d3.json("./data/samples.json").then((importedData) => {
 */
 function displayDemoInfo(subjectMetaData){
     let demoDiv = d3.select("#sample-metadata");
-    demoDiv.append("h5").text(`ID: ${subjectMetaData.id}`);
-    demoDiv.append("h5").text(`Ethnicity: ${subjectMetaData.ethnicity}`);
-    demoDiv.append("h5").text(`Gender: ${subjectMetaData.gender}`);
-    demoDiv.append("h5").text(`Age: ${subjectMetaData.age}`);
-    demoDiv.append("h5").text(`Location: ${subjectMetaData.location}`);
-    demoDiv.append("h5").text(`BBType: ${subjectMetaData.bbtype}`);
-    demoDiv.append("h5").text(`WFreq: ${subjectMetaData.wfreq}`); 
+    demoDiv.append("h6").text(`ID: ${subjectMetaData.id}`);
+    demoDiv.append("h6").text(`Ethnicity: ${subjectMetaData.ethnicity}`);
+    demoDiv.append("h6").text(`Gender: ${subjectMetaData.gender}`);
+    demoDiv.append("h6").text(`Age: ${subjectMetaData.age}`);
+    demoDiv.append("h6").text(`Location: ${subjectMetaData.location}`);
+    demoDiv.append("h6").text(`BBType: ${subjectMetaData.bbtype}`);
+    demoDiv.append("h6").text(`WFreq: ${subjectMetaData.wfreq}`); 
 }
 
 /*
@@ -133,6 +183,12 @@ function optionChanged(value){
      let subjectMetadata = getMetadata(metadata, value);
      
      displayDemoInfo(subjectMetadata);
+
+     // Bonus Gauge  - Update the wash frequency gauge for the selected subject
+     let gaugeData = getGaugeTraceData(subjectMetadata)
+
+     let gaugeLayout = {width: 600, height: 450, margin: { t: 0, b: 0 } };
+     Plotly.restyle('gauge', "value", [subjectMetadata.wfreq]);
 
 }
 /*
