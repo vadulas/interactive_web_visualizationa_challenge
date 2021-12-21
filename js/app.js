@@ -65,17 +65,18 @@ d3.json("./data/samples.json").then((importedData) => {
             mode: 'markers',
             marker: {
                 size: bubbleGraphData[1],
-                color: bubbleGraphData[0]
+                color: bubbleGraphData[0],
+                colorscale: 'Jet'
             }
         };
 
         let bubbleData = [bubbleTrace];
         let bubbleLayout = {
-            title: "Bubble Chart for the Subject's Samples"
+            title: "Bubble Chart for the Subject's Samples",
+            hovermoce: "closest",
+            xaxis: {title: "OTU ID"}
         };
-
         Plotly.newPlot("bubble", bubbleData, bubbleLayout);
-
 
         // Populate the demographic information
         let subjectMetadata = getMetadata(metadata, selVal);
@@ -103,7 +104,7 @@ function getGaugeTraceData(subjectMetadata){
         {
           domain: { x: [0, 1], y: [0, 1] },
           value: washFreq,
-          title: { text: "Wash Frequency" },
+          title: { text: "Subject Wash Frequency" },
           type: "indicator",
           mode: "gauge+number",
           textposition: "inside",
@@ -141,14 +142,19 @@ function getGaugeTraceData(subjectMetadata){
 * Returns a Sample array
 */
 function displayDemoInfo(subjectMetaData){
-    let demoDiv = d3.select("#sample-metadata");
-    demoDiv.append("h6").text(`ID: ${subjectMetaData.id}`);
-    demoDiv.append("h6").text(`Ethnicity: ${subjectMetaData.ethnicity}`);
-    demoDiv.append("h6").text(`Gender: ${subjectMetaData.gender}`);
-    demoDiv.append("h6").text(`Age: ${subjectMetaData.age}`);
-    demoDiv.append("h6").text(`Location: ${subjectMetaData.location}`);
-    demoDiv.append("h6").text(`BBType: ${subjectMetaData.bbtype}`);
-    demoDiv.append("h6").text(`WFreq: ${subjectMetaData.wfreq}`); 
+     // let demoDiv = d3.select("#sample-metadata");
+    // demoDiv.append("h6").text(`ID: ${subjectMetaData.id}`);
+    // demoDiv.append("h6").text(`Ethnicity: ${subjectMetaData.ethnicity}`);
+    // demoDiv.append("h6").text(`Gender: ${subjectMetaData.gender}`);
+    // demoDiv.append("h6").text(`Age: ${subjectMetaData.age}`);
+    // demoDiv.append("h6").text(`Location: ${subjectMetaData.location}`);
+    // demoDiv.append("h6").text(`BBType: ${subjectMetaData.bbtype}`);
+    // demoDiv.append("h6").text(`WFreq: ${subjectMetaData.wfreq}`); 
+
+    //Better way to add the demo info to the div
+    Object.entries(subjectMetaData).forEach(([key, value]) => {  
+        d3.select("#sample-metadata").append("h6").text(`${key} : ${value}`)
+        });
 }
 
 /*
