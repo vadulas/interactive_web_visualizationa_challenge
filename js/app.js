@@ -4,9 +4,9 @@ d3.json("./data/samples.json").then((importedData) => {
 	let data = importedData;
 
 	// Dynamically add test Subject ID No. to the dropdown menus
-	 names = data.names;
-     samples = data.samples;
-     metadata = data.metadata;
+	names = data.names;
+    samples = data.samples;
+    metadata = data.metadata;
 
 	names.forEach((name) => {
 		d3.select("#selDataset").append("option").text(name);
@@ -117,17 +117,18 @@ function getGaugeTraceData(subjectMetadata){
                 tickvals: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                 ticks: "outside"
             },
+            bar: {'color': "darkblue"},
             steps: [
-              { range: [0, 1], color: "lightgray" },
-              { range: [1, 2], color: "gray" },
-              { range: [2, 3], color: "lightgray" },
-              { range: [3, 4], color: "gray" },
-              { range: [4, 5], color: "lightgray" },
-              { range: [5, 6], color: "gray" },
-              { range: [6, 7], color: "lightgray" },
-              { range: [7, 8], color: "gray" },
-              { range: [8, 9], color: "lightgray" },
-              { range: [9, 10], color: "gray" }
+              { range: [0, 1], color: "white" },
+              { range: [1, 2], color: "lightgray" },
+              { range: [2, 3], color: "white" },
+              { range: [3, 4], color: "lightgray" },
+              { range: [4, 5], color: "white" },
+              { range: [5, 6], color: "lightgray" },
+              { range: [6, 7], color: "white" },
+              { range: [7, 8], color: "lightgray" },
+              { range: [8, 9], color: "white" },
+              { range: [9, 10], color: "lightgray" }
             ]
           }
         }
@@ -142,15 +143,7 @@ function getGaugeTraceData(subjectMetadata){
 * Returns a Sample array
 */
 function displayDemoInfo(subjectMetaData){
-     // let demoDiv = d3.select("#sample-metadata");
-    // demoDiv.append("h6").text(`ID: ${subjectMetaData.id}`);
-    // demoDiv.append("h6").text(`Ethnicity: ${subjectMetaData.ethnicity}`);
-    // demoDiv.append("h6").text(`Gender: ${subjectMetaData.gender}`);
-    // demoDiv.append("h6").text(`Age: ${subjectMetaData.age}`);
-    // demoDiv.append("h6").text(`Location: ${subjectMetaData.location}`);
-    // demoDiv.append("h6").text(`BBType: ${subjectMetaData.bbtype}`);
-    // demoDiv.append("h6").text(`WFreq: ${subjectMetaData.wfreq}`); 
-
+    
     //Better way to add the demo info to the div
     Object.entries(subjectMetaData).forEach(([key, value]) => {  
         d3.select("#sample-metadata").append("h6").text(`${key} : ${value}`)
